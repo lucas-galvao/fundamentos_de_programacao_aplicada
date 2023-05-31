@@ -1,16 +1,9 @@
-# fundamentos_de_programacao_aplicada
+# Fundamentos de Programação Aplicada
 
-A new Flutter project.
+Aplicação de Aprendizagem de Máquina Automazada aplicada ao Design de Redes Neurais Profundas.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A aplicação permite a escolha de um entre quatro datasets para o treinamento do modelo de redes neurais profundas, sendo esses:
+    CIFAR-10
+    MNIST
+    KMNIST
+    EUROSAT
