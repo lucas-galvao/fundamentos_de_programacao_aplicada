@@ -19,7 +19,7 @@ class Home extends StatelessWidget {
       body: Column(
         children: [
           titleSection,
-          buttonSection,
+          buttonSection(context),
         ],
       ),
     );
@@ -36,7 +36,7 @@ final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
   ),
 );
 
-Column _buildButtonColumn(String label) {
+Column _buildButtonColumn(String label, BuildContext context) {
   // Adicionar entrada action
   return Column(
     mainAxisSize: MainAxisSize.min,
@@ -45,26 +45,28 @@ Column _buildButtonColumn(String label) {
       ElevatedButton(
         style: raisedButtonStyle,
         child: Text(label, style: const TextStyle(fontSize: 20)),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/n');
+        },
       )
     ],
   );
 }
 
-Color color = Colors.blueGrey;
-
-Widget buttonSection = Column(
-  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  children: [
-    _buildButtonColumn('Cifar'),
-    const SizedBox(height: 30),
-    _buildButtonColumn('Mnist'),
-    const SizedBox(height: 30),
-    _buildButtonColumn('Kmnist'),
-    const SizedBox(height: 30),
-    _buildButtonColumn('Eurosat'),
-  ],
-);
+Column buttonSection(BuildContext context) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      _buildButtonColumn('Cifar', context),
+      const SizedBox(height: 30),
+      _buildButtonColumn('Mnist', context),
+      const SizedBox(height: 30),
+      _buildButtonColumn('Kmnist', context),
+      const SizedBox(height: 30),
+      _buildButtonColumn('Eurosat', context),
+    ],
+  );
+}
 
 Widget titleSection = Container(
   padding: const EdgeInsets.all(32),
