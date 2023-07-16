@@ -110,7 +110,7 @@ Center createCard(Map stringModel, BuildContext context) {
           color: Colors.black,
           child: SizedBox(
               width: 450,
-              height: 100,
+              height: 120,
               child: Column(
                 children: [
                   Container(
@@ -165,8 +165,8 @@ void detailsPopUp(Map modelInfo, BuildContext context) {
       builder: (BuildContext context) {
         return Center(
             child: Container(
-                width: 1000.0,
-                height: 250.0,
+                width: 1300.0,
+                height: 300.0,
                 child: AlertDialog(
                     content: Column(children: [
                       Text(
@@ -177,12 +177,21 @@ void detailsPopUp(Map modelInfo, BuildContext context) {
                             fontSize: 20),
                       ),
                       const SizedBox(height: 15),
+                      const Text(
+                        'Grammar:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 15),
+                      ),
+                      const SizedBox(height: 10),
                       Text(
-                        'Grammar: $grammar',
+                        grammar,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontSize: 20),
+                            fontSize: 15),
                       ),
                       const SizedBox(height: 15),
                       Row(
@@ -193,7 +202,7 @@ void detailsPopUp(Map modelInfo, BuildContext context) {
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
-                                fontSize: 20),
+                                fontSize: 15),
                           ),
                           const SizedBox(width: 15),
                           Text(
@@ -201,7 +210,7 @@ void detailsPopUp(Map modelInfo, BuildContext context) {
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
-                                fontSize: 20),
+                                fontSize: 15),
                           ),
                         ],
                       )
