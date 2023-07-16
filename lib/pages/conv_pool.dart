@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:fundamentos_de_programacao_aplicada/classes/model.dart';
+import 'package:fundamentos_de_programacao_aplicada/classes/conv_pool_layer.dart';
+import 'package:fundamentos_de_programacao_aplicada/pages/fc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ConvPool extends StatefulWidget {
-  const ConvPool({super.key});
+  const ConvPool({Key? key}) : super(key: key);
 
   @override
   _ConvPoolState createState() => _ConvPoolState();
 }
 
 class _ConvPoolState extends State<ConvPool> {
-  //Object? data = {};
-
+  late Model modelInfo;
   Map NValues = {
     '1': {'value': '', 'checked': false},
     '2': {'value': '', 'checked': false},
@@ -27,14 +30,12 @@ class _ConvPoolState extends State<ConvPool> {
     '5': {'value': '', 'checked': false}
   };
 
-  Map ConvExp = {
-    'conv': {'bnorm': '', 'n': ''},
-    'pool': '',
-    'm': ''
-  };
+  ConvPoolLayer ConvExp = ConvPoolLayer();
 
   @override
   Widget build(BuildContext context) {
+    modelInfo = context.watch<Model>();
+
     String nExp = NValues['1']['value'] +
         NValues['2']['value'] +
         NValues['3']['value'] +
@@ -42,9 +43,9 @@ class _ConvPoolState extends State<ConvPool> {
         NValues['5']['value'];
 
     if (nExp.length > 1) {
-      ConvExp['conv']['n'] = nExp.substring(0, nExp.length - 2);
+      ConvExp.conv['n'] = nExp.substring(0, nExp.length - 2);
     } else {
-      ConvExp['conv']['n'] = nExp;
+      ConvExp.conv['n'] = nExp;
     }
 
     String mExp = MValues['1']['value'] +
@@ -54,313 +55,115 @@ class _ConvPoolState extends State<ConvPool> {
         MValues['5']['value'];
 
     if (mExp.length > 1) {
-      ConvExp['m'] = mExp.substring(0, mExp.length - 2);
+      ConvExp.m = mExp.substring(0, mExp.length - 2);
     } else {
-      ConvExp['m'] = mExp;
+      ConvExp.m = mExp;
     }
 
-    String conv = '<conv' +
-        ConvExp['conv']['bnorm'] +
-        ' * (' +
-        ConvExp['conv']['n'] +
-        ')>';
+    String conv =
+        '${'${'<conv' + ConvExp.conv['bnorm']} * (' + ConvExp.conv['n']})>';
 
-    String convPool = '(' + conv + '' + ConvExp['pool'] + ') * ' + ConvExp['m'];
+    String convPool = '($conv${ConvExp.pool}) * ${ConvExp.m}';
 
     return Scaffold(
-      backgroundColor: Colors.grey[900],
-      appBar: AppBar(
-        centerTitle: true,
-        title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [logo]
-            //child: logo,
-            //const Text('Neural Network Designer'),
-            ),
-        backgroundColor: Colors.black,
-        toolbarHeight: 60,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Colors.teal,
-        child: const Icon(Icons.arrow_forward),
-      ),
-      body: Column(
-        children: [
-          _titleSection('<CONV_POOL>', convPool),
-          _titleSection('Convolutional Block', conv),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                style: raisedButtonStyle,
-                child: const Text('With Batch Normalization',
-                    style: TextStyle(fontSize: 20)),
-                onPressed: () {
-                  setState(() {
-                    ConvExp['conv']['bnorm'] = '.bnorm';
-                  });
-                },
-              ),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                style: raisedButtonStyle,
-                child: const Text('Without Batch Normalization',
-                    style: TextStyle(fontSize: 20)),
-                onPressed: () {
-                  setState(() {
-                    ConvExp['conv']['bnorm'] = '';
-                  });
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Container(
-            height: 25,
-            width: 25,
-            //padding: const EdgeInsets.only(bottom: 8),
-            child: const Text(
-              'N',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 25),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Row(
-              mainAxisSize: MainAxisSize.min,
+        backgroundColor: Colors.grey[900],
+        appBar: AppBar(
+          centerTitle: true,
+          title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      height: 15,
-                      width: 10,
-                      child: const Text('1',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 15)),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                        height: 10,
-                        width: 10,
-                        child: Checkbox(
-                          value: NValues['1']['checked'],
-                          onChanged: (bool? checked1) {
-                            setState(() {
-                              NValues['1']['checked'] = checked1;
-                              if (checked1 == true) {
-                                NValues['1']['value'] = '1 |';
-                              } else {
-                                NValues['1']['value'] = '';
-                              }
-                            });
-                          },
-                        )),
-                  ],
-                ),
-                const SizedBox(width: 30),
-                Column(
-                  children: [
-                    Container(
-                      height: 15,
-                      width: 10,
-                      child: const Text('2',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 15)),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      height: 10,
-                      width: 10,
-                      child: Checkbox(
-                        value: NValues['2']['checked'],
-                        onChanged: (bool? checked2) {
-                          setState(() {
-                            NValues['2']['checked'] = checked2;
-                            if (checked2 == true) {
-                              NValues['2']['value'] = ' 2 |';
-                            } else {
-                              NValues['2']['value'] = '';
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 30),
-                Column(
-                  children: [
-                    Container(
-                      height: 15,
-                      width: 10,
-                      child: const Text('3',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 15)),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      height: 10,
-                      width: 10,
-                      child: Checkbox(
-                        value: NValues['3']['checked'],
-                        onChanged: (bool? checked3) {
-                          setState(() {
-                            NValues['3']['checked'] = checked3;
-                            if (checked3 == true) {
-                              NValues['3']['value'] = ' 3 |';
-                            } else {
-                              NValues['3']['value'] = '';
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 30),
-                Column(
-                  children: [
-                    Container(
-                      height: 15,
-                      width: 10,
-                      child: const Text('4',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 15)),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      height: 10,
-                      width: 10,
-                      child: Checkbox(
-                        value: NValues['4']['checked'],
-                        onChanged: (bool? checked4) {
-                          setState(() {
-                            NValues['4']['checked'] = checked4;
-                            if (checked4 == true) {
-                              NValues['4']['value'] = ' 4 |';
-                            } else {
-                              NValues['4']['value'] = '';
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 30),
-                Column(
-                  children: [
-                    Container(
-                      height: 15,
-                      width: 10,
-                      child: const Text('5',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 15)),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      height: 10,
-                      width: 10,
-                      child: Checkbox(
-                        value: NValues['5']['checked'],
-                        onChanged: (bool? checked5) {
-                          setState(() {
-                            NValues['5']['checked'] = checked5;
-                            if (checked5 == true) {
-                              NValues['5']['value'] = ' 5 |';
-                            } else {
-                              NValues['5']['value'] = '';
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                )
-              ]),
-          const SizedBox(height: 5),
-          _titleSection('Pooling Block', ConvExp['pool']),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [logo]
+              //child: logo,
+              //const Text('Neural Network Designer'),
+              ),
+          backgroundColor: Colors.black,
+          toolbarHeight: 60,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            if (modelInfo.grammar.contains('<FC>')) {
+              modelInfo.convPool = ConvExp;
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => FC()));
+            }
+          },
+          backgroundColor: Colors.teal,
+          child: const Icon(Icons.arrow_forward),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
             children: [
-              ElevatedButton(
-                style: raisedButtonStyle,
-                child: const Text('Pooling With Dropout',
-                    style: TextStyle(fontSize: 20)),
-                onPressed: () {
-                  setState(() {
-                    ConvExp['pool'] = '<pool>';
-                  });
-                },
+              _titleSection('<CONV_POOL>', convPool),
+              _titleSection('Convolutional Block', conv),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: raisedButtonStyle,
+                    child: const Text('With Batch Normalization',
+                        style: TextStyle(fontSize: 20)),
+                    onPressed: () {
+                      setState(() {
+                        ConvExp.conv['bnorm'] = '.bnorm';
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    style: raisedButtonStyle,
+                    child: const Text('Without Batch Normalization',
+                        style: TextStyle(fontSize: 20)),
+                    onPressed: () {
+                      setState(() {
+                        ConvExp.conv['bnorm'] = '';
+                      });
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                style: raisedButtonStyle,
-                child: const Text('Pooling Without Dropout',
-                    style: TextStyle(fontSize: 20)),
-                onPressed: () {
-                  setState(() {
-                    ConvExp['pool'] = '<pool.dropout>';
-                  });
-                },
+              const SizedBox(height: 10),
+              const SizedBox(
+                height: 25,
+                width: 25,
+                //padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  'N',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 25),
+                ),
               ),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                style: raisedButtonStyle,
-                child: const Text('Without Pooling',
-                    style: TextStyle(fontSize: 20)),
-                onPressed: () {
-                  setState(() {
-                    ConvExp['pool'] = '';
-                  });
-                },
-              ),
-              _titleSection('M', ConvExp['m']),
+              const SizedBox(height: 10),
               Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(
                       children: [
-                        Container(
+                        const SizedBox(
                           height: 15,
                           width: 10,
-                          child: const Text('1',
+                          child: Text('1',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   fontSize: 15)),
                         ),
                         const SizedBox(height: 10),
-                        Container(
+                        SizedBox(
                             height: 10,
                             width: 10,
                             child: Checkbox(
-                              value: MValues['1']['checked'],
-                              onChanged: (bool? checkedm1) {
+                              value: NValues['1']['checked'],
+                              onChanged: (bool? checked1) {
                                 setState(() {
-                                  MValues['1']['checked'] = checkedm1;
-                                  if (checkedm1 == true) {
-                                    MValues['1']['value'] = '1 |';
+                                  NValues['1']['checked'] = checked1;
+                                  if (checked1 == true) {
+                                    NValues['1']['value'] = '1 |';
                                   } else {
-                                    MValues['1']['value'] = '';
+                                    NValues['1']['value'] = '';
                                   }
                                 });
                               },
@@ -370,28 +173,28 @@ class _ConvPoolState extends State<ConvPool> {
                     const SizedBox(width: 30),
                     Column(
                       children: [
-                        Container(
+                        const SizedBox(
                           height: 15,
                           width: 10,
-                          child: const Text('2',
+                          child: Text('2',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   fontSize: 15)),
                         ),
                         const SizedBox(height: 10),
-                        Container(
+                        SizedBox(
                           height: 10,
                           width: 10,
                           child: Checkbox(
-                            value: MValues['2']['checked'],
-                            onChanged: (bool? checkedm2) {
+                            value: NValues['2']['checked'],
+                            onChanged: (bool? checked2) {
                               setState(() {
-                                MValues['2']['checked'] = checkedm2;
-                                if (checkedm2 == true) {
-                                  MValues['2']['value'] = ' 2 |';
+                                NValues['2']['checked'] = checked2;
+                                if (checked2 == true) {
+                                  NValues['2']['value'] = ' 2 |';
                                 } else {
-                                  MValues['2']['value'] = '';
+                                  NValues['2']['value'] = '';
                                 }
                               });
                             },
@@ -402,28 +205,28 @@ class _ConvPoolState extends State<ConvPool> {
                     const SizedBox(width: 30),
                     Column(
                       children: [
-                        Container(
+                        const SizedBox(
                           height: 15,
                           width: 10,
-                          child: const Text('3',
+                          child: Text('3',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   fontSize: 15)),
                         ),
                         const SizedBox(height: 10),
-                        Container(
+                        SizedBox(
                           height: 10,
                           width: 10,
                           child: Checkbox(
-                            value: MValues['3']['checked'],
-                            onChanged: (bool? checkedm3) {
+                            value: NValues['3']['checked'],
+                            onChanged: (bool? checked3) {
                               setState(() {
-                                MValues['3']['checked'] = checkedm3;
-                                if (checkedm3 == true) {
-                                  MValues['3']['value'] = ' 3 |';
+                                NValues['3']['checked'] = checked3;
+                                if (checked3 == true) {
+                                  NValues['3']['value'] = ' 3 |';
                                 } else {
-                                  MValues['3']['value'] = '';
+                                  NValues['3']['value'] = '';
                                 }
                               });
                             },
@@ -434,28 +237,28 @@ class _ConvPoolState extends State<ConvPool> {
                     const SizedBox(width: 30),
                     Column(
                       children: [
-                        Container(
+                        const SizedBox(
                           height: 15,
                           width: 10,
-                          child: const Text('4',
+                          child: Text('4',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   fontSize: 15)),
                         ),
                         const SizedBox(height: 10),
-                        Container(
+                        SizedBox(
                           height: 10,
                           width: 10,
                           child: Checkbox(
-                            value: MValues['4']['checked'],
-                            onChanged: (bool? checkedm4) {
+                            value: NValues['4']['checked'],
+                            onChanged: (bool? checked4) {
                               setState(() {
-                                MValues['4']['checked'] = checkedm4;
-                                if (checkedm4 == true) {
-                                  MValues['4']['value'] = ' 4 |';
+                                NValues['4']['checked'] = checked4;
+                                if (checked4 == true) {
+                                  NValues['4']['value'] = ' 4 |';
                                 } else {
-                                  MValues['4']['value'] = '';
+                                  NValues['4']['value'] = '';
                                 }
                               });
                             },
@@ -466,28 +269,28 @@ class _ConvPoolState extends State<ConvPool> {
                     const SizedBox(width: 30),
                     Column(
                       children: [
-                        Container(
+                        const SizedBox(
                           height: 15,
                           width: 10,
-                          child: const Text('5',
+                          child: Text('5',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   fontSize: 15)),
                         ),
                         const SizedBox(height: 10),
-                        Container(
+                        SizedBox(
                           height: 10,
                           width: 10,
                           child: Checkbox(
-                            value: MValues['5']['checked'],
-                            onChanged: (bool? checkedm5) {
+                            value: NValues['5']['checked'],
+                            onChanged: (bool? checked5) {
                               setState(() {
-                                MValues['5']['checked'] = checkedm5;
-                                if (checkedm5 == true) {
-                                  MValues['5']['value'] = ' 5 |';
+                                NValues['5']['checked'] = checked5;
+                                if (checked5 == true) {
+                                  NValues['5']['value'] = ' 5 |';
                                 } else {
-                                  MValues['5']['value'] = '';
+                                  NValues['5']['value'] = '';
                                 }
                               });
                             },
@@ -496,19 +299,222 @@ class _ConvPoolState extends State<ConvPool> {
                       ],
                     )
                   ]),
+              const SizedBox(height: 5),
+              _titleSection('Pooling Block', ConvExp.pool),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: raisedButtonStyle,
+                    child: const Text('Pooling With Dropout',
+                        style: TextStyle(fontSize: 20)),
+                    onPressed: () {
+                      setState(() {
+                        ConvExp.pool = '<pool.dropout>';
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    style: raisedButtonStyle,
+                    child: const Text('Pooling Without Dropout',
+                        style: TextStyle(fontSize: 20)),
+                    onPressed: () {
+                      setState(() {
+                        ConvExp.pool = '<pool>';
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    style: raisedButtonStyle,
+                    child: const Text('Without Pooling',
+                        style: TextStyle(fontSize: 20)),
+                    onPressed: () {
+                      setState(() {
+                        ConvExp.pool = '';
+                      });
+                    },
+                  ),
+                  _titleSection('M', ConvExp.m),
+                  Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 15,
+                              width: 10,
+                              child: Text('1',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 15)),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                                height: 10,
+                                width: 10,
+                                child: Checkbox(
+                                  value: MValues['1']['checked'],
+                                  onChanged: (bool? checkedm1) {
+                                    setState(() {
+                                      MValues['1']['checked'] = checkedm1;
+                                      if (checkedm1 == true) {
+                                        MValues['1']['value'] = '1 |';
+                                      } else {
+                                        MValues['1']['value'] = '';
+                                      }
+                                    });
+                                  },
+                                )),
+                          ],
+                        ),
+                        const SizedBox(width: 30),
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 15,
+                              width: 10,
+                              child: Text('2',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 15)),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: 10,
+                              width: 10,
+                              child: Checkbox(
+                                value: MValues['2']['checked'],
+                                onChanged: (bool? checkedm2) {
+                                  setState(() {
+                                    MValues['2']['checked'] = checkedm2;
+                                    if (checkedm2 == true) {
+                                      MValues['2']['value'] = ' 2 |';
+                                    } else {
+                                      MValues['2']['value'] = '';
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(width: 30),
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 15,
+                              width: 10,
+                              child: Text('3',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 15)),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: 10,
+                              width: 10,
+                              child: Checkbox(
+                                value: MValues['3']['checked'],
+                                onChanged: (bool? checkedm3) {
+                                  setState(() {
+                                    MValues['3']['checked'] = checkedm3;
+                                    if (checkedm3 == true) {
+                                      MValues['3']['value'] = ' 3 |';
+                                    } else {
+                                      MValues['3']['value'] = '';
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(width: 30),
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 15,
+                              width: 10,
+                              child: Text('4',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 15)),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: 10,
+                              width: 10,
+                              child: Checkbox(
+                                value: MValues['4']['checked'],
+                                onChanged: (bool? checkedm4) {
+                                  setState(() {
+                                    MValues['4']['checked'] = checkedm4;
+                                    if (checkedm4 == true) {
+                                      MValues['4']['value'] = ' 4 |';
+                                    } else {
+                                      MValues['4']['value'] = '';
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(width: 30),
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 15,
+                              width: 10,
+                              child: Text('5',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 15)),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: 10,
+                              width: 10,
+                              child: Checkbox(
+                                value: MValues['5']['checked'],
+                                onChanged: (bool? checkedm5) {
+                                  setState(() {
+                                    MValues['5']['checked'] = checkedm5;
+                                    if (checkedm5 == true) {
+                                      MValues['5']['value'] = ' 5 |';
+                                    } else {
+                                      MValues['5']['value'] = '';
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      ]),
+                  const SizedBox(height: 30),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
 final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
   foregroundColor: Colors.white,
   backgroundColor: Colors.teal,
-  minimumSize: Size(300, 50),
-  padding: EdgeInsets.symmetric(horizontal: 16),
+  minimumSize: const Size(300, 50),
+  padding: const EdgeInsets.symmetric(horizontal: 16),
   shape: const RoundedRectangleBorder(
     borderRadius: BorderRadius.all(Radius.circular(20)),
   ),

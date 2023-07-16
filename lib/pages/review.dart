@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fundamentos_de_programacao_aplicada/pages/loading.dart';
+import 'package:fundamentos_de_programacao_aplicada/pages/dataset.dart';
+import 'package:fundamentos_de_programacao_aplicada/classes/model.dart';
 
-class N extends StatefulWidget {
-  const N({super.key});
+class Review extends StatelessWidget {
+  Review({Key? key}) : super(key: key);
 
-  @override
-  _NState createState() => _NState();
-}
-
-class _NState extends State<N> {
-  String NExpression = '';
-  Color DefaultForeground = Colors.white;
-  Color DefaultBackground = Colors.teal;
+  late Model modelInfo;
 
   @override
   Widget build(BuildContext context) {
+    modelInfo = context.watch<Model>();
+
     return Scaffold(
       backgroundColor: Colors.grey[900],
       appBar: AppBar(
@@ -29,153 +28,53 @@ class _NState extends State<N> {
         backgroundColor: Colors.black,
         toolbarHeight: 60,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (NExpression.length > 1) {
-            if (NExpression.contains('CONV_POOL')) {
-              Navigator.pushNamed(context, '/conv_pool');
-            }
-          } else {
-            _invalidGrammar(context);
-          }
-        },
-        backgroundColor: Colors.teal,
-        child: const Icon(Icons.arrow_forward),
-      ),
       body: Column(
         children: [
-          _titleSection(NExpression),
-          const SizedBox(height: 30),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                style: raisedButtonStyle(DefaultForeground, DefaultBackground),
-                child: Text('CONV_POOL', style: const TextStyle(fontSize: 20)),
-                onPressed: () {
-                  setState(() {
-                    NExpression = NExpression + '<CONV_POOL>';
-                  });
-                },
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                style: raisedButtonStyle(DefaultForeground, DefaultBackground),
-                child: Text('FLATTEN', style: const TextStyle(fontSize: 20)),
-                onPressed: () {
-                  setState(() {
-                    NExpression = NExpression + '<FLATTEN>';
-                  });
-                },
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                style: raisedButtonStyle(DefaultForeground, DefaultBackground),
-                child: Text('FC', style: const TextStyle(fontSize: 20)),
-                onPressed: () {
-                  setState(() {
-                    NExpression = NExpression + '<FC>';
-                  });
-                },
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                style: raisedButtonStyle(DefaultForeground, DefaultBackground),
-                child: Text('DROPOUT', style: const TextStyle(fontSize: 20)),
-                onPressed: () {
-                  setState(() {
-                    NExpression = NExpression + '<DROPOUT>';
-                  });
-                },
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                style: raisedButtonStyle(DefaultForeground, Colors.red),
-                child: Text('CLEAR', style: const TextStyle(fontSize: 20)),
-                onPressed: () {
-                  setState(() {
-                    NExpression = '';
-                  });
-                },
-              ),
-            ],
+          _titleSection('Dataset', modelInfo.dataset),
+          _titleSection('Grammar', modelInfo.getGrammar()),
+          const SizedBox(height: 50),
+          ElevatedButton(
+            style: raisedButtonStyle(Colors.white, Colors.teal),
+            child: const Text('Train Model', style: TextStyle(fontSize: 25)),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Loading(modelInfo: modelInfo)));
+            },
           ),
+          const SizedBox(height: 50),
+          ElevatedButton(
+            style: raisedButtonStyle(Colors.white, Colors.red),
+            child: const Text('Clear Grammar', style: TextStyle(fontSize: 25)),
+            onPressed: () {
+              modelInfo.clearGrammar();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Dataset()),
+                  (Route<dynamic> route) => false);
+            },
+          )
         ],
       ),
     );
   }
 }
 
-ButtonStyle raisedButtonStyle(foreground, background) {
-  return ElevatedButton.styleFrom(
+ButtonStyle raisedButtonStyle(Color foreground, Color background) {
+  return (ElevatedButton.styleFrom(
     foregroundColor: foreground,
     backgroundColor: background,
-    minimumSize: Size(200, 50),
-    padding: EdgeInsets.symmetric(horizontal: 16),
+    minimumSize: const Size(200, 70),
+    padding: const EdgeInsets.symmetric(horizontal: 16),
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(20)),
+      borderRadius: BorderRadius.all(Radius.circular(30)),
     ),
-  );
+  ));
 }
 
-/*
-Column _buildButtonColumn(String label, String n) {
-  // Adicionar entrada action
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      ElevatedButton(
-        style: raisedButtonStyle,
-        child: Text(label, style: const TextStyle(fontSize: 20)),
-        onPressed: () {
-          setState( () {n = n + label;})
-        },
-      )
-    ],
-  );
-}
-
-Column _buttonSection(n) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      _buildButtonColumn('CONV_POOL', n),
-      const SizedBox(height: 30),
-      _buildButtonColumn('FLATTEN', n),
-      const SizedBox(height: 30),
-      _buildButtonColumn('FC', n),
-      const SizedBox(height: 30),
-      _buildButtonColumn('DROPOUT', n),
-    ],
-  );
-}
-*/
-
-Future<void> _invalidGrammar(BuildContext context) async {
-  return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-            title: const Text('Invalid Grammar'),
-            content: const Text('Build a valid grammar to continue'),
-            backgroundColor: Colors.teal,
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK', style: TextStyle(color: Colors.black)),
-              ),
-            ]);
-      });
-}
-
-Container _titleSection(String expression) {
+Container _titleSection(String title, String expression) {
   return Container(
-    padding: const EdgeInsets.all(32),
+    padding: const EdgeInsets.all(15),
     child: Row(
       children: [
         Expanded(
@@ -186,9 +85,10 @@ Container _titleSection(String expression) {
               /*2*/
               Container(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: const Text(
-                  'Grammar:',
-                  style: TextStyle(
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       fontSize: 25),
@@ -196,13 +96,14 @@ Container _titleSection(String expression) {
               ),
               Container(
                 //color: Colors.black,
-                padding: const EdgeInsets.only(bottom: 8),
+                //padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
                   expression,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.teal,
-                      fontSize: 15),
+                      fontSize: 25),
                 ),
               ),
             ],
