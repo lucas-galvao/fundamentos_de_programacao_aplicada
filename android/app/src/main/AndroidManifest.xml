@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.fundamentos_de_programacao_aplicada">
+    package="com.nnd.fundamentos_de_programacao_aplicada">
    <application
-        android:label="fundamentos_de_programacao_aplicada"
+        android:label="Neural Network Designer"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -8,7 +8,7 @@
 PRODUCT_NAME = fundamentos_de_programacao_aplicada
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.fundamentosDeProgramacaoAplicada
+PRODUCT_BUNDLE_IDENTIFIER = com.ndd.fundamentosDeProgramacaoAplicada
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.ndd. All rights reserved.

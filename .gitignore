@@ -10,6 +10,7 @@
 .svn/
 migrate_working_dir/
 lib/Fila.txt
+android/app/app-key.jks
 
 # IntelliJ related
 *.iml

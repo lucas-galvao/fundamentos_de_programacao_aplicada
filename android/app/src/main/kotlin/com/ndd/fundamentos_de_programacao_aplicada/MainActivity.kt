@@ -1,4 +1,4 @@
-package com.example.fundamentos_de_programacao_aplicada
+package com.nnd.fundamentos_de_programacao_aplicada
 
 import io.flutter.embedding.android.FlutterActivity
 
