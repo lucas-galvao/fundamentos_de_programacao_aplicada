@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fundamentos_de_programacao_aplicada/pages/loading.dart';
-import 'package:fundamentos_de_programacao_aplicada/pages/dataset.dart';
+import 'package:fundamentos_de_programacao_aplicada/pages/grammar.dart';
 import 'package:fundamentos_de_programacao_aplicada/classes/model.dart';
 
 class Review extends StatelessWidget {
@@ -50,7 +50,7 @@ class Review extends StatelessWidget {
             onPressed: () {
               modelInfo.clearGrammar();
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => Dataset()),
+                  MaterialPageRoute(builder: (context) => Grammar()),
                   (Route<dynamic> route) => false);
             },
           )
